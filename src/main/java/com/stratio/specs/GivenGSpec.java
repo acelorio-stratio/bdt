@@ -1,26 +1,35 @@
 package com.stratio.specs;
 
+import static com.stratio.assertions.Assertions.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.assertj.core.api.Assertions;
+import org.openqa.selenium.WebElement;
+
 import com.auth0.jwt.JWTSigner;
 import com.ning.http.client.Response;
 import com.ning.http.client.cookie.Cookie;
 import com.stratio.exceptions.DBException;
 import com.stratio.tests.utils.RemoteSSHConnection;
 import com.stratio.tests.utils.ThreadProperty;
+
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
-import org.assertj.core.api.Assertions;
-import org.openqa.selenium.WebElement;
-
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.stratio.assertions.Assertions.assertThat;
 
 /**
  * Generic Given Specs.
@@ -722,4 +731,62 @@ public class GivenGSpec extends BaseGSpec {
         commonspec.getKafkaUtils().connect();
     }
 
+    /**
+     * Create a file in HDFS
+     *
+     * @param filename Path to the file to be created
+     */
+    @Given("^file '(.*?)' exists in HDFS$")
+    public void createHDFSFile(String filename) {
+        commonspec.getHDFSUtils().obtainFullAccess();
+        commonspec.getHDFSUtils().createFile(filename);
+        commonspec.getHDFSUtils().revokeFullAccess();
+    }
+
+    /**
+     * Create a Gosec Policy ACL for the HDFS Plugin
+     *
+     * @param filename   Path to the resource
+     * @param action     Action specified: Read, Write, Delete
+     * @param permission Either Allow or Deny
+     */
+    @Given("^a policy for file '(.*?)' has action '(.*?)' and permission '(.*?)'$")
+    public void createHDFSPolicyForFile(String filename, String action, String permission) {
+        commonspec.getHDFSUtils().addPolicy(filename, action, permission, false);
+    }
+
+    /**
+     * Create a Gosec Policy ACL for the HDFS Plugin
+     *
+     * @param filename   Path to the resource
+     * @param action     Action specified: Read, Write, Delete
+     * @param permission Either Allow or Deny
+     */
+    @Given("^a policy for folder '(.*?)' has action '(.*?)' and permission '(.*?)'$")
+    public void createHDFSPolicyForFolder(String filename, String action, String permission) {
+        // HDFS Plugin does not currently support folder permissions. Everything is a file
+        commonspec.getHDFSUtils().addPolicy(filename, action, permission, false);
+    }
+
+    /**
+     * Create a recursive Gosec Policy ACL for the HDFS Plugin
+     *
+     * @param filename   Path to the resource
+     * @param action     Action specified: Read, Write, Delete
+     * @param permission Either Allow or Deny
+     */
+    @Given("^a recursive policy for folder '(.*?)' has action '(.*?)' and permission '(.*?)'$")
+    public void createRecursiveHDFSPolicyForFolder(String filename, String action, String permission) {
+        commonspec.getHDFSUtils().addPolicy(filename, action, permission, true);
+    }
+
+    /**
+     * Setup connection to Kerberos according to configuration and obtain a HDFS FileSystem
+     *
+     * @throws IOException If the Kerberos login fails
+     */
+    @Given("^I am connected to a Gosec Kerberized HDFS$")
+    public void connectToHDFS() throws IOException {
+        commonspec.getHDFSUtils().connect();
+    }
 }

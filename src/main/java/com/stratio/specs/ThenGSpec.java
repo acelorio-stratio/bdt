@@ -1,5 +1,22 @@
 package com.stratio.specs;
 
+import static com.stratio.assertions.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.apache.zookeeper.KeeperException;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Fail;
+import org.assertj.core.api.WritableAssertionInfo;
+import org.json.JSONArray;
+import org.openqa.selenium.WebElement;
 
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.DataType;
@@ -9,21 +26,10 @@ import com.mongodb.DBObject;
 import com.stratio.assertions.DBObjectsAssert;
 import com.stratio.tests.utils.PreviousWebElements;
 import com.stratio.tests.utils.ThreadProperty;
+
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Then;
 import gherkin.formatter.model.DataTableRow;
-
-import org.apache.zookeeper.KeeperException;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Fail;
-import org.assertj.core.api.WritableAssertionInfo;
-import org.json.JSONArray;
-import org.openqa.selenium.WebElement;
-
-import java.util.*;
-import java.util.regex.Pattern;
-
-import static com.stratio.assertions.Assertions.assertThat;
 
 public class ThenGSpec extends BaseGSpec {
 
@@ -765,5 +771,9 @@ public class ThenGSpec extends BaseGSpec {
         }
     }
 
+    @Then("^the previous HDFS operation should have resulted in '(.*?)'$")
+    public void assertLastOperation(String wished) {
+        Assertions.assertThat(commonspec.getHDFSUtils().getOperationResult()).isEqualToIgnoringCase(wished);
+    }
 }
 

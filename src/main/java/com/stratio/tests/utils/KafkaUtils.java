@@ -1,12 +1,9 @@
 package com.stratio.tests.utils;
 
-import kafka.admin.AdminOperationException;
-import kafka.admin.AdminUtils;
-import kafka.admin.RackAwareMode;
-import kafka.common.KafkaException;
-import kafka.common.TopicAlreadyMarkedForDeletionException;
-import kafka.utils.ZKStringSerializer$;
-import kafka.utils.ZkUtils;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,9 +16,13 @@ import org.apache.kafka.common.requests.MetadataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import kafka.admin.AdminOperationException;
+import kafka.admin.AdminUtils;
+import kafka.admin.RackAwareMode;
+import kafka.common.KafkaException;
+import kafka.common.TopicAlreadyMarkedForDeletionException;
+import kafka.utils.ZKStringSerializer$;
+import kafka.utils.ZkUtils;
 
 /**
  * Generic utilities for operations over Kafka.
@@ -52,7 +53,7 @@ public class KafkaUtils {
         this.replication = Integer.valueOf(System.getProperty("KAFKA_REPLICATION", "1"));
         this.sessionTimeoutMs = Integer.valueOf(System.getProperty("KAFKA_SESSION_TIMEOUT", "10000"));
         this.connectionTimeoutMs = Integer.valueOf(System.getProperty("KAFKA_CONNECTION_TIMEOUT", "60000"));
-        this.isSecureKafkaCluster = Boolean.valueOf(System.getProperty("KAFKA_CONNECTION_TIMEOUT", "false"));
+        this.isSecureKafkaCluster = Boolean.valueOf(System.getProperty("KAFKA_SECURE", "false"));
         this.zookeeperConnect = System.getProperty("ZOOKEEPER_HOSTS","0.0.0.0:2181");
         this.rackAwareMode = RackAwareMode.Enforced$.MODULE$;
         this.topicConfig=new Properties();

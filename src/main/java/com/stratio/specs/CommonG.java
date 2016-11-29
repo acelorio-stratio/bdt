@@ -1,5 +1,57 @@
 package com.stratio.specs;
 
+import static com.stratio.assertions.Assertions.assertThat;
+import static org.testng.Assert.fail;
+
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.io.FileUtils;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Condition;
+import org.hjson.JsonValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.ResultSet;
@@ -18,36 +70,26 @@ import com.ning.http.client.Realm.AuthScheme;
 import com.ning.http.client.Response;
 import com.ning.http.client.cookie.Cookie;
 import com.stratio.conditions.Conditions;
-import com.stratio.tests.utils.*;
+import com.stratio.tests.utils.CassandraUtil;
+import com.stratio.tests.utils.CassandraUtils;
+import com.stratio.tests.utils.ElasticSearchUtil;
+import com.stratio.tests.utils.ElasticSearchUtils;
+import com.stratio.tests.utils.ExceptionList;
+import com.stratio.tests.utils.HDFSUtil;
+import com.stratio.tests.utils.HDFSUtils;
+import com.stratio.tests.utils.HashUtils;
+import com.stratio.tests.utils.HttpResponse;
+import com.stratio.tests.utils.KafkaUtil;
+import com.stratio.tests.utils.KafkaUtils;
+import com.stratio.tests.utils.MongoDBUtil;
+import com.stratio.tests.utils.MongoDBUtils;
+import com.stratio.tests.utils.PreviousWebElements;
+import com.stratio.tests.utils.RemoteSSHConnection;
+import com.stratio.tests.utils.ThreadProperty;
+import com.stratio.tests.utils.ZookeeperUtil;
+import com.stratio.tests.utils.ZookeeperUtils;
+
 import cucumber.api.DataTable;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.io.FileUtils;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Condition;
-import org.hjson.JsonValue;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.Locatable;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.stratio.assertions.Assertions.assertThat;
-import static org.testng.Assert.fail;
 
 public class CommonG {
 
@@ -1750,6 +1792,10 @@ public class CommonG {
 	public String updateMarathonJson(String json){
 		return removeJSONPathElement(removeJSONPathElement(removeJSONPathElement(json,".versionInfo"),".version"),".uris.*");
 	}
+
+    public HDFSUtils getHDFSUtils() {
+        return HDFSUtil.INSTANCE.getHDFSUtils();
+    }
 
 
 }

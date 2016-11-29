@@ -1,12 +1,15 @@
 package com.stratio.specs;
 
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfig;
-import com.stratio.exceptions.DBException;
-import com.stratio.tests.utils.ThreadProperty;
-import com.thoughtworks.selenium.SeleniumException;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
+import static org.testng.Assert.fail;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CommandInfo;
@@ -17,15 +20,14 @@ import org.openqa.selenium.remote.http.HttpClient;
 import org.openqa.selenium.remote.internal.ApacheHttpClient;
 import org.openqa.selenium.remote.internal.HttpClientFactory;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.concurrent.TimeUnit;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.stratio.exceptions.DBException;
+import com.stratio.tests.utils.ThreadProperty;
+import com.thoughtworks.selenium.SeleniumException;
 
-import static org.testng.Assert.fail;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 
 /**
  * @author Javier Delgado
@@ -261,5 +263,17 @@ public class HookGSpec extends BaseGSpec {
                 commonspec.getZookeeperClient().disconnect();
             }
         }
+    }
+
+    @After("@hdfs")
+    public void cleanFiles() {
+        commonspec.getLogger().debug("Cleaning created HDFS files");
+        commonspec.getHDFSUtils().cleanCreatedFiles();
+    }
+
+    @After("@hdfs")
+    public void cleanPolicies() {
+        commonspec.getLogger().debug("Cleaning created Gosec HDFS policies");
+        commonspec.getHDFSUtils().revokeFullAccess();
     }
 }

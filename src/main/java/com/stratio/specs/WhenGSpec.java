@@ -1,17 +1,19 @@
 package com.stratio.specs;
 
-import com.csvreader.CsvReader;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import com.ning.http.client.Response;
-import com.stratio.cucumber.converter.ArrayListConverter;
-import com.stratio.cucumber.converter.NullableStringConverter;
-import com.stratio.tests.utils.ThreadProperty;
-import cucumber.api.DataTable;
-import cucumber.api.Transform;
-import cucumber.api.java.en.When;
+import static com.stratio.assertions.Assertions.assertThat;
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.regex.Pattern;
+
 import org.apache.zookeeper.KeeperException;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.hjson.JsonArray;
@@ -22,12 +24,19 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.regex.Pattern;
+import com.csvreader.CsvReader;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+import com.ning.http.client.Response;
+import com.stratio.cucumber.converter.ArrayListConverter;
+import com.stratio.cucumber.converter.NullableStringConverter;
+import com.stratio.tests.utils.ThreadProperty;
 
-import static com.stratio.assertions.Assertions.assertThat;
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+import cucumber.api.DataTable;
+import cucumber.api.Transform;
+import cucumber.api.java.en.When;
 
 public class WhenGSpec extends BaseGSpec {
 
@@ -734,5 +743,52 @@ public class WhenGSpec extends BaseGSpec {
         XContentBuilder builder = jsonBuilder().startObject().field(key, value).endObject();
         mappingsource.add(builder);
         commonspec.getElasticSearchClient().createMapping(indexName, mappingName, mappingsource);
+    }
+
+    /**
+     * Append to HDFS File some fixed text
+     *
+     * @param filename HDFS Path to write on
+     */
+    @When("^I attempt to write to the file '(.*?)'$")
+    public void appendToHDFS(String filename) {
+        commonspec.getHDFSUtils().writeToFile(filename, "Test Content");
+    }
+
+    /**
+     * Read content of a HDFS File
+     *
+     * @param filename HDFS Path to read
+     */
+    @When("^I attempt to read the file '(.*?)'$")
+    public void readHDFS(String filename) {
+        try {
+            commonspec.getHDFSUtils().readFile(filename);
+        } catch (IOException e) {
+            commonspec.getLogger().debug("IOException captured");
+            commonspec.getLogger().debug(e.toString());
+            commonspec.getExceptions().add(e);
+
+        }
+    }
+
+    /**
+     * Delete a HDFS File
+     *
+     * @param filename HDFS Path to delete
+     */
+    @When("^I attempt to delete the file '(.*?)'$")
+    public void deleteFromHDFS(String filename) {
+        commonspec.getHDFSUtils().deleteFile(filename);
+    }
+
+    /**
+     * Create a HDFS File
+     *
+     * @param filename HDFS Path to create
+     */
+    @When("^I attempt to create the file '(.*?)'$")
+    public void createHDFSFile(String filename) {
+        commonspec.getHDFSUtils().createFile(filename);
     }
 }
