@@ -80,11 +80,11 @@ hose {
         | -DAGENT_LIST=1,2
         | -DKAFKA_HOSTS=%%KAFKA:9092
         | -DSSH=%%UBUNTU
-        | -DSLEEPTEST=1""".stripMargin().stripIndent()
+        | -DSLEEPTEST=1
         | -DLDAP_USER='cn=admin,dc=stratio,dc=com'
         | -DLDAP_PASSWORD=stratio
         | -DLDAP_SSL=false
-        | -DLDAP_URL=%%LDAP:389
+        | -DLDAP_URL=%%LDAP:389""".stripMargin().stripIndent()
     
     DEV = { config ->        
         doCompile(config)
