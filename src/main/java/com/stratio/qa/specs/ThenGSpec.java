@@ -795,7 +795,7 @@ public class ThenGSpec extends BaseGSpec {
      * @param attributeName The name of the attribute to look for in the LdapEntry
      * @param expectedValue The expected value of the attribute
      */
-    @Then("^The LDAP entry returned in the previous query contains the attribute '(.+?)' with the value '(.+?)'$")
+    @Then("^the LDAP entry contains the attribute '(.+?)' with the value '(.+?)'$")
     public void ldapEntryContains(String attributeName, String expectedValue) {
         Assertions.assertThat(this.commonspec.getPreviousLdapResults().getEntry().getAttribute(attributeName).getStringValue()).isEqualTo(expectedValue);
     }
