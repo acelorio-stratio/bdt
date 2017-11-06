@@ -122,7 +122,7 @@ public class CommonG {
 
     private ZookeeperSecUtils zkSecClient;
 
-    private SearchResult previousLdapResults;
+    private Optional<SearchResult> previousLdapResults;
 
     /**
      * Checks if a given string matches a regular expression or contains a string
@@ -1878,7 +1878,7 @@ public class CommonG {
      *      *
      * @return the previously searched for LDAP result
      */
-    public SearchResult getPreviousLdapResults() {
+    public Optional<SearchResult> getPreviousLdapResults() {
         return this.previousLdapResults;
     }
 
@@ -1888,7 +1888,7 @@ public class CommonG {
      * @param result the LDAP SearchResult obtained from an LDAP query
      */
     public void setPreviousLdapResults(SearchResult result) {
-        this.previousLdapResults = result;
+        this.previousLdapResults = Optional.of(result);
     }
 
 

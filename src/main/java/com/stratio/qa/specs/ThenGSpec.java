@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.stratio.qa.assertions.Assertions.assertThat;
+import static org.testng.AssertJUnit.fail;
 
 /**
  * Generic Then Specs.
@@ -797,7 +798,13 @@ public class ThenGSpec extends BaseGSpec {
      */
     @Then("^the LDAP entry contains the attribute '(.+?)' with the value '(.+?)'$")
     public void ldapEntryContains(String attributeName, String expectedValue) {
-        Assertions.assertThat(this.commonspec.getPreviousLdapResults().getEntry().getAttribute(attributeName).getStringValue()).isEqualTo(expectedValue);
+        if (this.commonspec.getPreviousLdapResults().isPresent()) {
+            Assertions.assertThat(this.commonspec.getPreviousLdapResults().get().getEntry().getAttribute(attributeName).getStringValue()).isEqualTo(expectedValue);
+        } else {
+            fail("No previous LDAP results were stored in memory");
+        }
+
+
     }
 }
 
