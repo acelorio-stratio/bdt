@@ -45,7 +45,7 @@ public class LdapUtils {
         this.user = System.getProperty("LDAP_USER", "cn=exampleuser,dc=org");
         this.password = System.getProperty("LDAP_PASSWORD", "password");
         this.ssl = System.getProperty("LDAP_SSL", "false").equals("true") ? true : false;
-        this.url = System.getProperty("LDAP_URL", "ldap://example.host.com");
+        this.url = (this.ssl == true ? "ldaps://" : "ldap://") + System.getProperty("LDAP_URL", "example.host.com");
     }
 
     public void connect() {
