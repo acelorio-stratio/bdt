@@ -5,6 +5,6 @@ Feature: LDAP steps test
 
   Scenario: Search for a specific user and get some of its attributes
     When I search in LDAP using the filter 'uid=abrookes' and the baseDn 'dc=stratio,dc=com'
-    Then The LDAP entry returned in the previous query contains the attribute 'uid' with the value 'abrookes'
-    And The LDAP entry returned in the previous query contains the attribute 'sn' with the value 'Anthony'
-    And The LDAP entry returned in the previous query contains the attribute 'gidNumber' with the value '101'
+    Then the LDAP entry contains the attribute 'uid' with the value 'abrookes'
+    And the LDAP entry contains the attribute 'sn' with the value 'Anthony'
+    And the LDAP entry contains the attribute 'gidNumber' with the value '101'
