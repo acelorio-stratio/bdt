@@ -53,6 +53,7 @@
         <logger name="kafka.admin" level="OFF"/>
         <logger name="org.elasticsearch.client.transport" level="OFF"/>
         <logger name="com.ning.http.client.AsyncHttpClientAsyncHttpClient" level="ERROR"/>
+        <logger name="org.ldaptive" level="ERROR"/>
 
     </Loggers>
 </Configuration>
