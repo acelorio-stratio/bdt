@@ -52,7 +52,7 @@ hose {
                   'LDAP_HOSTNAME=%%OWNHOSTNAME',
                   'HOSTNAME=%%OWNHOSTNAME',
                   'LDAP_ORGANISATION=Stratio',
-                  'LDAP_DOMAIN'=stratio.com,
+                  'LDAP_DOMAIN=stratio.com',
                   'LDAP_ADMIN_PASSWORD=stratio'],
             'sleep': 30,
             'healthcheck': 389]],
