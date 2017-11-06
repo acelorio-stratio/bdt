@@ -742,4 +742,14 @@ public class GivenGSpec extends BaseGSpec {
         commonspec.getKafkaUtils().setZkHost(zkHost, zkPort, zkPath);
         commonspec.getKafkaUtils().connect();
     }
+
+    /**
+     * Connect to LDAP.
+     *
+     *
+     */
+    @Given("^I connect to LDAP$")
+    public void connectLDAP() {
+        commonspec.getLdapUtils().connect();
+    }
 }

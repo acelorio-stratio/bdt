@@ -33,6 +33,7 @@ import org.assertj.core.api.Assertions;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.hjson.JsonArray;
 import org.hjson.JsonValue;
+import org.ldaptive.SearchRequest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -857,5 +858,15 @@ public class WhenGSpec extends BaseGSpec {
 
         // Save in environment variable
         ThreadProperty.set(envVar, retrievedData);
+    }
+
+    /**
+     * Search for a LDAP object
+     *
+     *
+     */
+    @When("^I search in LDAP using the filter '(.+?)' and the baseDn '(.+?)'$")
+    public void searchLDAP(String filter, String baseDn) throws Exception {
+        this.commonspec.setPreviousLdapResults(commonspec.getLdapUtils().search(new SearchRequest(baseDn, filter)));
     }
 }

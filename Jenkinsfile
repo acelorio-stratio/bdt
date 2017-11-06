@@ -45,6 +45,17 @@ hose {
                  'KAFKA_DELETE_TOPIC_ENABLE=true'],
            'sleep': 30,       
            'healthcheck': 9300]],
+        ['LDAP': [
+            'image': stratio/ldap-docker:0.1.0-SNAPSHOT',
+            'env': [
+                  'LDAP_SCHEMA=rfc2307',
+                  'LDAP_HOSTNAME=%%OWNHOSTNAME',
+                  'HOSTNAME=%%OWNHOSTNAME',
+                  'LDAP_ORGANISATION=Stratio',
+                  'LDAP_DOMAIN'=stratio.com,
+                  'LDAP_ADMIN_PASSWORD=stratio'],
+            'sleep': 30,
+            'healthcheck': 389]],
 	['CHROME': [
 	   'image': 'stratio/selenium-chrome:48',
            'volumes': [
@@ -70,6 +81,10 @@ hose {
         | -DKAFKA_HOSTS=%%KAFKA:9092
         | -DSSH=%%UBUNTU
         | -DSLEEPTEST=1""".stripMargin().stripIndent()
+        | -DLDAP_USER='cn=admin,dc=stratio,dc=com'
+        | -DLDAP_PASSWORD=stratio
+        | -DLDAP_SSL=false
+        | -DLDAP_URL=%%LDAP:389
     
     DEV = { config ->        
         doCompile(config)

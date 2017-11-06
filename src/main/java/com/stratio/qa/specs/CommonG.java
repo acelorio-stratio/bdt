@@ -45,6 +45,7 @@ import org.hjson.JsonType;
 import org.hjson.JsonValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.ldaptive.SearchResult;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.internal.Locatable;
@@ -120,6 +121,8 @@ public class CommonG {
     private String restProtocol;
 
     private ZookeeperSecUtils zkSecClient;
+
+    private SearchResult previousLdapResults;
 
     /**
      * Checks if a given string matches a regular expression or contains a string
@@ -1861,5 +1864,32 @@ public class CommonG {
             }
         }
     }
+
+    /**
+     * Get the LDAP utils.
+     *
+     * @return LdapUtils
+     */
+    public LdapUtils getLdapUtils() {
+        return LdapUtil.INSTANCE.getldapUtils();
+    }
+
+    /**
+     *      *
+     * @return the previously searched for LDAP result
+     */
+    public SearchResult getPreviousLdapResults() {
+        return this.previousLdapResults;
+    }
+
+    /**
+     * Store a LDAP search result
+     *
+     * @param result the LDAP SearchResult obtained from an LDAP query
+     */
+    public void setPreviousLdapResults(SearchResult result) {
+        this.previousLdapResults = result;
+    }
+
 
 }
