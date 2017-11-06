@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.stratio.qa.utils;
 
 import org.ldaptive.*;
@@ -86,7 +87,7 @@ public class LdapUtils {
         }
     }
 
-    public void modify(String dn, AttributeModification ... modifications) throws LdapException{
+    public void modify(String dn, AttributeModification ... modifications) throws LdapException {
         Connection conn = null;
         try {
             conn = this.connFactory.getConnection();
@@ -99,7 +100,7 @@ public class LdapUtils {
         }
     }
 
-    public void delete(String dn) throws LdapException{
+    public void delete(String dn) throws LdapException {
         Connection conn = null;
         try {
             conn = this.connFactory.getConnection();
