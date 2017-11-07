@@ -603,13 +603,22 @@ public class CucumberReporter implements Formatter, Reporter {
                 if (failed != null) {
                     element.setAttribute(STATUS, "FAIL");
                     StringWriter stringWriter = new StringWriter();
-                    failed.getError().printStackTrace(new PrintWriter(stringWriter));
-                    Element exception = createException(doc, failed.getError().getClass().getName(),
-                            stringBuilder.toString(), stringWriter.toString());
-                    element.appendChild(exception);
-                    Element exceptionJunit = createExceptionJunit(docJunit, failed.getError().getClass().getName(),
-                            stringBuilder.toString(), stringWriter.toString());
-                    Junit.appendChild(exceptionJunit);
+                    if (failed.getErrorMessage().contains("An important scenario has failed!")) {
+                        Element exception = createException(doc, "An important scenario has failed! TESTS EXECUTION ABORTED!",
+                                stringBuilder.toString(), stringWriter.toString());
+                        element.appendChild(exception);
+                        Element exceptionJunit = createExceptionJunit(docJunit, "An important scenario has failed! TESTS EXECUTION ABORTED!",
+                                stringBuilder.toString(), stringWriter.toString());
+                        Junit.appendChild(exceptionJunit);
+                    } else {
+                        failed.getError().printStackTrace(new PrintWriter(stringWriter));
+                        Element exception = createException(doc, failed.getError().getClass().getName(),
+                                stringBuilder.toString(), stringWriter.toString());
+                        element.appendChild(exception);
+                        Element exceptionJunit = createExceptionJunit(docJunit, failed.getError().getClass().getName(),
+                                stringBuilder.toString(), stringWriter.toString());
+                        Junit.appendChild(exceptionJunit);
+                    }
                 } else if (skipped != null) {
                     if (treatSkippedAsFailure) {
                         element.setAttribute(STATUS, "FAIL");

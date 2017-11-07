@@ -186,3 +186,37 @@ On the other hand, if it is executed *WITHOUT* the environment variable, the bac
 In conclusion, if environment variable is defined the code below the tag would be included as part of the background, if not, it will be omitted.
 
 More examples can be found in [Background feature](src/test/resources/features/backgroundTag1.feature)
+
+- **Important Tag**
+
+This tag pretends to be an improvement that quit execution after tagged scenariuo fails. Examples:
+
+```
+Feature: Example Quit after tag
+
+ Scenario: Keeps executing next scenario
+     Given something
+     When fail
+
+  @important
+  Scenario: important and fails
+    Given something
+    When fail
+    Then something
+  ```
+
+In addition, this tag can be used the other way. By defining the property ```-Dquietasdefault=false``` every scenario turns "important" so a ```@notimportant``` tag can be used to prevent fast failure like this:
+
+```
+Feature: Example Quit after tag
+
+ Scenario: Keeps executing next scenario
+     Given something
+     When fail
+
+  @notimportant
+  Scenario: important and fails
+    Given something
+    When fail
+    Then something
+  ```

@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -143,6 +144,13 @@ public class CucumberRunner {
         runtime.run();
 
         if (!runtime.getErrors().isEmpty()) {
+            Iterator<Throwable> iterator = runtime.getErrors().iterator();
+            while (iterator.hasNext()) {
+                Throwable value = iterator.next();
+                if (value.getMessage().contains("TESTS EXECUTION ABORTED!")) {
+                    iterator.remove();
+                }
+            }
             logger.error ("Got {} exceptions", runtime.getErrors());
             throw new CucumberException(runtime.getErrors().get(0));
         }

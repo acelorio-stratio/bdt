@@ -18,9 +18,10 @@ package com.stratio.qa.specs;
 
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
-import com.stratio.qa.exceptions.DBException;
+import com.stratio.qa.exceptions.SuppressableException;
 import com.stratio.qa.utils.ThreadProperty;
 import com.thoughtworks.selenium.SeleniumException;
+import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import org.openqa.selenium.Dimension;
@@ -36,9 +37,8 @@ import org.openqa.selenium.remote.internal.HttpClientFactory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.fail;
@@ -54,6 +54,14 @@ public class HookGSpec extends BaseGSpec {
     public static final int IMPLICITLY_WAIT = 10;
 
     public static final int SCRIPT_TIMEOUT = 30;
+
+    private static final String TAG = "@important";
+
+    private static final String customTAG = "@notimportant";
+
+    private static boolean prevScenarioFailed = false;
+
+    private static final String quietasdefault = System.getProperty("quietasdefault", "true");
 
     /**
      * Default constructor.
@@ -72,6 +80,32 @@ public class HookGSpec extends BaseGSpec {
         commonspec.getExceptions().clear();
     }
 
+
+    @After
+    public void watch_this_tagged_scenario(Scenario scenario) throws Exception {
+        if (quietasdefault.equals("false")) {
+            if (!isTaggedAsNotImportant(scenario)) {
+                boolean isFailed = scenario.isFailed();
+                if (isFailed) {
+                    prevScenarioFailed = isFailed;
+                }
+            }
+        } else {
+            if (isTagged(scenario)) {
+                boolean isFailed = scenario.isFailed();
+                if (isFailed) {
+                    prevScenarioFailed = isFailed;
+                }
+            }
+        }
+    }
+
+    @Before
+    public void quit_if_tagged_scenario_failed(Scenario scenario) throws Throwable {
+        if (prevScenarioFailed) {
+            throw new SuppressableException("An important scenario has failed! TESTS EXECUTION ABORTED!", true);
+        }
+    }
 
     /**
      * Connect to selenium.
@@ -188,5 +222,15 @@ public class HookGSpec extends BaseGSpec {
             commonspec.getLogger().debug("Closing SSH remote connection");
             commonspec.getRemoteSSHConnection().getSession().disconnect();
         }
+    }
+
+    private boolean isTagged(Scenario scenario) {
+        Collection<String> tags = scenario.getSourceTagNames();
+        return tags.contains(TAG);
+    }
+
+    private boolean isTaggedAsNotImportant(Scenario scenario) {
+        Collection<String> tags = scenario.getSourceTagNames();
+        return tags.contains(customTAG);
     }
 }
