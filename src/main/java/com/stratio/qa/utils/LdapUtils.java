@@ -29,7 +29,7 @@ public class LdapUtils {
 
     private ConnectionFactory connFactory;
 
-    private ConnectionConfig config = new ConnectionConfig();
+    private ConnectionConfig config;
 
     private BlockingConnectionPool pool;
 
@@ -49,6 +49,7 @@ public class LdapUtils {
     }
 
     public void connect() {
+        this.config = new ConnectionConfig();
         this.config.setLdapUrl(this.url);
         this.config.setUseSSL(this.ssl);
         this.config.setConnectionInitializer(new BindConnectionInitializer(user, new Credential(password)));

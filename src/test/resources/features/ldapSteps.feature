@@ -8,3 +8,7 @@ Feature: LDAP steps test
     Then the LDAP entry contains the attribute 'uid' with the value 'abrookes'
     And the LDAP entry contains the attribute 'sn' with the value 'Anthony'
     And the LDAP entry contains the attribute 'gidNumber' with the value '101'
+
+  Scenario: Test if multiple scenarios can be run sequentially
+    When I search in LDAP using the filter 'uid=abrookes' and the baseDn 'dc=stratio,dc=com'
+    Then the LDAP entry contains the attribute 'uid' with the value 'abrookes'
