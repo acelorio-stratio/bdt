@@ -12,3 +12,8 @@ Feature: LDAP steps test
   Scenario: Test if multiple scenarios can be run sequentially
     When I search in LDAP using the filter 'uid=abrookes' and the baseDn 'dc=stratio,dc=com'
     Then the LDAP entry contains the attribute 'uid' with the value 'abrookes'
+
+  Scenario: Test if an attribute which has more than one value is correctly found
+    When I search in LDAP using the filter 'cn=Developers' and the baseDn 'dc=stratio,dc=com'
+    Then the LDAP entry contains the attribute 'memberUid' with the value 'uid=adoucet,ou=People,dc=stratio,dc=com'
+    And the LDAP entry contains the attribute 'memberUid' with the value 'uid=irossi,ou=People,dc=stratio,dc=com'
